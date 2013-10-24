@@ -21,8 +21,33 @@ public class Location {
 		m_latitude = latitude;
 		m_longitude = longitude;
 	}
-	
+
+	public double getLatitude() {
+		return m_latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.m_latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return m_longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.m_longitude = longitude;
+	}
+
+	/**
+	 * Returns great-circle distance from a given Location in kilometers. The
+	 * calculation is performed using the haversine formula.
+	 * 
+	 * @param target
+	 *            Second Location for distance calculation.
+	 * @return Great-circle distance in kilometers.
+	 */
 	public double distanceFrom(Location target) {
-		throw new UnsupportedOperationException("Location.distanceFrom() is not yet implemented.");
+		throw new UnsupportedOperationException(
+				"Location.distanceFrom() is not yet implemented.");
 	}
 }
