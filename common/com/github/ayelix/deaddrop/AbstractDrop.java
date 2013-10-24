@@ -15,16 +15,16 @@ public abstract class AbstractDrop {
 	private String m_data;
 	/** The drop location */
 	private Location m_location;
-	/** The required accuracy of a user's location to pick up the drop (in km). */
-	private double m_locationAccuracyKm;
+	/** The required accuracy of a user's location to pick up the drop (in miles). */
+	private double m_locationAccuracyMi;
 
 	/** Create a drop with the given data and metadata. */
 	public AbstractDrop(final String tag, final String data,
-			final Location location, final double locationAccuracyInKilometers) {
+			final Location location, final double locationAccuracyInMiles) {
 		m_tag = tag;
 		m_data = data;
 		m_location = location;
-		m_locationAccuracyKm = locationAccuracyInKilometers;
+		m_locationAccuracyMi = locationAccuracyInMiles;
 	} // End constructor
 
 	public String getTag() {
@@ -52,22 +52,22 @@ public abstract class AbstractDrop {
 	}
 
 	/**
-	 * Get the required accuracy for this drop in kilometers.
+	 * Get the required accuracy for this drop in miles.
 	 * 
-	 * @return Maximum permissible distance in kilometers.
+	 * @return Maximum permissible distance in miles.
 	 */
 	public double getLocationAccuracy() {
-		return m_locationAccuracyKm;
+		return m_locationAccuracyMi;
 	}
 
 	/**
-	 * Set the required accuracy for this drop in kilometers.
+	 * Set the required accuracy for this drop in miles.
 	 * 
 	 * @param locationAccuracyKm
-	 *            Maximum permissible distance in kiometers.
+	 *            Maximum permissible distance in miles.
 	 */
-	public void setLocationAccuracy(double locationAccuracyKm) {
-		this.m_locationAccuracyKm = locationAccuracyKm;
+	public void setLocationAccuracy(double locationAccuracyMiles) {
+		this.m_locationAccuracyMi = locationAccuracyMiles;
 	}
 
 } // End class AbstractDrop
