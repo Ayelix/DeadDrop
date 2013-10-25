@@ -237,23 +237,26 @@ public class TagActivity extends Activity {
 
 		// Provide vibration feedback for a successful read
 		startFeedback();
-		
-		// Create an intent and fill it with the extras used by both drops and pickups
+
+		// Create an intent and fill it with the extras used by both drops and
+		// pickups
 		Intent intent = new Intent();
-		intent.putExtra(IntentConstants.EXTRA_ID, tagIDStr);
-		intent.putExtra(IntentConstants.EXTRA_LAT, String.valueOf(m_lastLocation.getLatitude()));
-		intent.putExtra(IntentConstants.EXTRA_LON, String.valueOf(m_lastLocation.getLongitude()));
+		intent.putExtra(Constants.EXTRA_ID, tagIDStr);
+		intent.putExtra(Constants.EXTRA_LAT,
+				String.valueOf(m_lastLocation.getLatitude()));
+		intent.putExtra(Constants.EXTRA_LON,
+				String.valueOf(m_lastLocation.getLongitude()));
 
 		// Check if this is a new drop or a pickup
 		if (m_dropRadioButton.isChecked()) {
 			// Launch the activity to enter drop information
 			intent.setClass(this, DropActivity.class);
-			intent.setAction(IntentConstants.ACTION_DROP);
+			intent.setAction(Constants.ACTION_DROP);
 			startActivity(intent);
 		} else {
 			// Launch the activity to display pickup results
 			intent.setClass(this, ResultsActivity.class);
-			intent.setAction(IntentConstants.ACTION_PICKUP);
+			intent.setAction(Constants.ACTION_PICKUP);
 			startActivity(intent);
 		}
 	}
@@ -264,6 +267,11 @@ public class TagActivity extends Activity {
 	private void readTagFromUI() {
 		String tagIDStr = m_tagEditText.getText().toString();
 
+		// The location updates may never have been started, so get the last
+		// known location here in case it hasn't been set yet
+		m_lastLocation = m_locationManager
+				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
 		// Ignore a blank or whitespace-only ID
 		if (!tagIDStr.isEmpty() && !tagIDStr.trim().isEmpty()) {
 			tagReady(tagIDStr);
@@ -272,7 +280,7 @@ public class TagActivity extends Activity {
 
 	/**
 	 * Updates the UI to reflect the NFC read in progress and enables the NFC
-	 * foreground dispatch.  Also starts receiving GPS updates.
+	 * foreground dispatch. Also starts receiving GPS updates.
 	 */
 	private void startNFCRead() {
 		// Update the button text while waiting for a tag
@@ -295,12 +303,13 @@ public class TagActivity extends Activity {
 		m_locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				0, 0, m_locationListener);
 		// In case there are no location updates, save the last known location
-		m_lastLocation = m_locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		m_lastLocation = m_locationManager
+				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	}
 
 	/**
 	 * Updates the UI to reflect no NFC read in progress and disables the NFC
-	 * foreground dispatch.  Also stops GPS updates.
+	 * foreground dispatch. Also stops GPS updates.
 	 */
 	private void stopNFCRead() {
 		// Update tag button text to indicate its new function

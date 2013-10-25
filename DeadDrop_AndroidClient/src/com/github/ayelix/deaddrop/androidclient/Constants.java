@@ -1,6 +1,6 @@
 package com.github.ayelix.deaddrop.androidclient;
 
-public final class IntentConstants {
+public final class Constants {
 	/** Intent action for an attempted pickup. */
 	public static final String ACTION_PICKUP = "com.github.ayelix.deaddrop.androidclient.ACTION_PICKUP";
 	/** Intent action for a new drop. */
@@ -12,4 +12,11 @@ public final class IntentConstants {
 	public static final String EXTRA_LAT = "com.github.ayelix.deaddrop.androidclient.EXTRA_LAT";
 	/** Intent extra for a longitude. */
 	public static final String EXTRA_LON = "com.github.ayelix.deaddrop.androidclient.EXTRA_LON";
+	
+	/** Default server address including port. */
+	public static final String DEFAULT_SERVER_ADDR = "http://192.168.1.109:8080";
+	/** Path for drop requests. */
+	public static final String DROP_PATH = "/drop";
+	/** Path for pickup requests. */
+	public static final String PICKUP_PATH = "/pickup";
 }
