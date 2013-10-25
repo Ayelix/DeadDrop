@@ -47,9 +47,9 @@ public final class DropServlet extends HttpServlet {
 				final JSONObject reqObj = (JSONObject) JSONValue.parse(reader);
 				final String tag = (String) reqObj.get("tag");
 				final String data = (String) reqObj.get("data");
-				final double lat = (double) reqObj.get("lat");
-				final double lon = (double) reqObj.get("long");
-				final double accuracy = (double) reqObj.get("accuracy");
+				final double lat = ((Number) reqObj.get("lat")).doubleValue();
+				final double lon = ((Number) reqObj.get("long")).doubleValue();
+				final double accuracy = ((Number) reqObj.get("accuracy")).doubleValue();
 				final String image = (String) reqObj.get("image");
 
 				// Create a Drop with the parsed values
