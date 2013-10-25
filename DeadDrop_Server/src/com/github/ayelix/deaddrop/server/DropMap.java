@@ -35,7 +35,7 @@ public class DropMap extends HashMap<String, Drop> {
 	}
 
 	/**
-	 * Shortcut method to add a Drop with its ID as the key.
+	 * Shortcut method to add a Drop using its ID as the key.
 	 * 
 	 * @param drop
 	 *            Drop to add.

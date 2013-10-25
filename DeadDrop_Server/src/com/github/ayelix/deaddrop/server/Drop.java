@@ -25,6 +25,10 @@ public final class Drop extends AbstractDrop {
 		m_image = image;
 	}
 	
+	public String toString() {
+		return super.toString() + ", tag=" + getTag() + ", data=" + getData() + ", accuracy=" + getLocationAccuracy();
+	}
+	
 	public BufferedImage getImage() {
 		return m_image;
 	}

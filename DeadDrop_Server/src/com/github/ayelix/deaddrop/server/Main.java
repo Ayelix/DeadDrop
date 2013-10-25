@@ -30,6 +30,7 @@ public final class Main extends HttpServlet {
 					.println("Too many arguments, this server accepts one optional argument "
 							+ ARGUMENT_GENERATE
 							+ " to generate sample drops at startup.");
+			System.exit(1);
 		}
 		
 		// Start the server
@@ -49,10 +50,10 @@ public final class Main extends HttpServlet {
 
 	/** Add some sample drops to the DropMap. */
 	public static void generateMap() {
-		throw new UnsupportedOperationException(
-				"DropMap.generateMap() not implemented yet.");
+		DropMap map = DropMap.getInstance();
 		
-		//DropMap map = DropMap.getInstance();
-		//System.out.println("Drops generated.");
+		MapGenerator.populate(map, 3);
+		
+		System.out.println("Drops generated.");
 	}
 }
