@@ -3,6 +3,12 @@
 
     <string name="app_name">DeadDrop</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <!-- Tag button text values -->
+    <string name="tagButton_text_enabled">Read a Tag</string>
+    <string name="tagButton_text_disabled">Waiting for NFC Tag…</string>
+    <!-- Tag entry hint value -->
+    <string name="tagEditText_hint">Manually enter tag…</string>
+    <!-- Go button text value -->
+    <string name="goButton_text">Go</string>
 
 </resources>
