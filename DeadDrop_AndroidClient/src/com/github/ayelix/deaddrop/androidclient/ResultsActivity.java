@@ -2,9 +2,9 @@ package com.github.ayelix.deaddrop.androidclient;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 
 public class ResultsActivity extends Activity {
 	private static final String TAG = "ResultsActivity";
@@ -15,16 +15,36 @@ public class ResultsActivity extends Activity {
 		setContentView(R.layout.activity_results);
 
 		// Get the intent that started the activity
-		Intent intent = getIntent();
-		Log.d(TAG, intent.getAction());
-		Log.d(TAG, String.valueOf(intent.getExtras().size()));
+		final Intent intent = getIntent();
+
+		// Get the intent action
+		final String action = intent.getAction();
+
+		// An action must be specified
+		if (null == action) {
+			Log.e(TAG, "Unspecified action.");
+			finish();
+			return;
+		}
+
+		// The action must be one that this activity handles
+		if (action.equals(IntentConstants.ACTION_DROP)) {
+			throw new UnsupportedOperationException(
+					"Drop action not implemented yet.");
+		} else if (action.equals(IntentConstants.ACTION_PICKUP)) {
+			startPickup();
+		} else {
+			Log.e(TAG, "Invalid action: " + action);
+			finish();
+			return;
+		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.results, menu);
-		return true;
-	}
+	/**
+	 * Starts the HTTP request for a pickup attempt and performs associated
+	 * operations.
+	 */
+	private void startPickup() {
 
+	}
 }
