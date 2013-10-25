@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,10 +32,14 @@ import android.widget.Toast;
 public class TagActivity extends Activity {
 	private static final String TAG = "TagActivity";
 
+	/** List of NFC intent action strings that this activity will handle. */
 	private static final List<String> NFC_ACTION_LIST = Arrays
 			.asList(NfcAdapter.ACTION_NDEF_DISCOVERED,
 					NfcAdapter.ACTION_TAG_DISCOVERED,
 					NfcAdapter.ACTION_TECH_DISCOVERED);
+
+	/** Vibration pattern for NFC read feedback. */
+	private static final long[] VIBRATE_PATTERN = new long[] { 0, 150, 0, 300 };
 
 	private Button m_tagButton;
 	private EditText m_tagEditText;
@@ -45,6 +50,9 @@ public class TagActivity extends Activity {
 
 	/** Will hold the default NFC adapter for the device. */
 	private NfcAdapter m_nfcAdapter;
+
+	/** Will hold the vibrator for this device. */
+	private Vibrator m_vibrator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +80,9 @@ public class TagActivity extends Activity {
 			finish();
 			return;
 		}
+
+		// Get the vibrator
+		m_vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 
 		// Get the views
 		m_tagButton = (Button) findViewById(R.id.tagButton);
@@ -125,10 +136,13 @@ public class TagActivity extends Activity {
 		// Make sure it's an NFC intent that should be handled
 		final String action = intent.getAction();
 		if (NFC_ACTION_LIST.contains(action)) {
+			// Provide vibration feedback for a successful read
+			startFeedback();
+
 			// Get the scanned tag's ID in a String format
 			final Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 			final String tagIDStr = Arrays.toString(tag.getId());
-			
+
 			Log.d(TAG, "Scanned tag with ID: " + tagIDStr);
 
 			// Clear the flag to indicate the read is complete
@@ -201,6 +215,13 @@ public class TagActivity extends Activity {
 		// Disable NFC foreground dispatch
 		m_nfcAdapter.disableForegroundDispatch(this);
 		Log.d(TAG, "NFC foreground dispatch disabled.");
+	}
+
+	/**
+	 * Starts the vibration feedback.
+	 */
+	private void startFeedback() {
+		m_vibrator.vibrate(VIBRATE_PATTERN, -1);
 	}
 
 }
