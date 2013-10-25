@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -41,6 +42,8 @@ public class TagActivity extends Activity {
 	/** Vibration pattern for NFC read feedback. */
 	private static final long[] VIBRATE_PATTERN = new long[] { 0, 150, 0, 300 };
 
+	private RadioButton m_dropRadioButton;
+	private RadioButton m_pickupRadioButton;
 	private Button m_tagButton;
 	private EditText m_tagEditText;
 	private Button m_goButton;
@@ -85,6 +88,8 @@ public class TagActivity extends Activity {
 		m_vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
 
 		// Get the views
+		m_dropRadioButton = (RadioButton) findViewById(R.id.dropRadioButton);
+		m_pickupRadioButton = (RadioButton) findViewById(R.id.pickupRadioButton);
 		m_tagButton = (Button) findViewById(R.id.tagButton);
 		m_tagEditText = (EditText) findViewById(R.id.tagEditText);
 		m_goButton = (Button) findViewById(R.id.goButton);
@@ -187,6 +192,13 @@ public class TagActivity extends Activity {
 
 		// Provide vibration feedback for a successful read
 		startFeedback();
+
+		// Check if this is a new drop or a pickup
+		if (m_dropRadioButton.isChecked()) {
+			Log.d(TAG, "Drop");
+		} else {
+			Log.d(TAG, "Pickup");
+		}
 	}
 
 	/**
@@ -194,7 +206,7 @@ public class TagActivity extends Activity {
 	 */
 	private void readTagFromUI() {
 		String tagIDStr = m_tagEditText.getText().toString();
-		
+
 		// Ignore a blank or whitespace-only ID
 		if (!tagIDStr.isEmpty() && !tagIDStr.trim().isEmpty()) {
 			tagReady(tagIDStr);

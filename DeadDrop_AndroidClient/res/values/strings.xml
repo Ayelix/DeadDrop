@@ -10,5 +10,8 @@
     <string name="tagEditText_hint">Manually enter tag…</string>
     <!-- Go button text value -->
     <string name="goButton_text">Go</string>
+    <!-- Radio button text values -->
+    <string name="dropRadioButton_text">Drop</string>
+    <string name="pickupRadioButton_text">Pickup</string>
 
 </resources>
