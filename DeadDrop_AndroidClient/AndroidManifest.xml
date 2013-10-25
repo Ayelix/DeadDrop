@@ -7,9 +7,14 @@
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="17" />
-    <uses-permission android:name="android.permission.NFC"/>
-    <uses-feature android:required="true" android:name="android.hardware.nfc"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <uses-permission android:name="android.permission.NFC" />
+
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -24,6 +29,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.github.ayelix.deaddrop.androidclient.ResultsActivity"
+            android:label="@string/title_activity_results" >
+        </activity>
+        <activity
+            android:name="com.github.ayelix.deaddrop.androidclient.DropActivity"
+            android:label="@string/title_activity_drop" >
         </activity>
     </application>
 

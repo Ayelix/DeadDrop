@@ -13,5 +13,8 @@
     <!-- Radio button text values -->
     <string name="dropRadioButton_text">Drop</string>
     <string name="pickupRadioButton_text">Pickup</string>
+    <string name="title_activity_results">ResultsActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_drop">DropActivity</string>
 
 </resources>

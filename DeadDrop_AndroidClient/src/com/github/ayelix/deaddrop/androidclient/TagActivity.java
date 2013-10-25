@@ -195,9 +195,17 @@ public class TagActivity extends Activity {
 
 		// Check if this is a new drop or a pickup
 		if (m_dropRadioButton.isChecked()) {
-			Log.d(TAG, "Drop");
+			// Launch the activity to enter drop information
+			Intent dropIntent = new Intent(this, DropActivity.class);
+			dropIntent.setAction(IntentConstants.ACTION_DROP);
+			dropIntent.putExtra(IntentConstants.EXTRA_ID, tagIDStr);
+			startActivity(dropIntent);
 		} else {
-			Log.d(TAG, "Pickup");
+			// Launch the activity to display pickup results
+			Intent pickupIntent = new Intent(this, ResultsActivity.class);
+			pickupIntent.setAction(IntentConstants.ACTION_PICKUP);
+			pickupIntent.putExtra(IntentConstants.EXTRA_ID, tagIDStr);
+			startActivity(pickupIntent);
 		}
 	}
 
