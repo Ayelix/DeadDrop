@@ -1,8 +1,8 @@
 package com.github.ayelix.deaddrop.androidclient;
 
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 
@@ -17,6 +17,7 @@ public class DropActivity extends Activity {
 		// Get the intent that started the activity
 		Intent intent = getIntent();
 		Log.d(TAG, intent.getAction());
+		Log.d(TAG, String.valueOf(intent.getExtras().size()));
 	}
 
 	@Override

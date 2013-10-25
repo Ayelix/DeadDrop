@@ -5,7 +5,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -57,6 +61,34 @@ public class TagActivity extends Activity {
 	/** Will hold the vibrator for this device. */
 	private Vibrator m_vibrator;
 
+	/** Will hold the location manager for this device. */
+	private LocationManager m_locationManager;
+	/** Most recent known location. */
+	private android.location.Location m_lastLocation;
+
+	/**
+	 * Location listener to receive location updates once the location is
+	 * requested.
+	 */
+	private LocationListener m_locationListener = new LocationListener() {
+		@Override
+		public void onLocationChanged(Location location) {
+			m_lastLocation = location;
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,27 +97,11 @@ public class TagActivity extends Activity {
 		// Get the NFC adapter
 		m_nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-		// Make sure NFC is present on this device
-		if (null == m_nfcAdapter) {
-			Toast.makeText(this,
-					"Device must support NFC to use this application.",
-					Toast.LENGTH_LONG).show();
-			finish();
-			return;
-		}
-
-		// Make sure NFC is enabled
-		if (!m_nfcAdapter.isEnabled()) {
-			Toast.makeText(this,
-					"You must enable NFC to use this application.",
-					Toast.LENGTH_LONG).show();
-			startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
-			finish();
-			return;
-		}
-
 		// Get the vibrator
 		m_vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
+
+		// Get the location manager
+		m_locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		// Get the views
 		m_dropRadioButton = (RadioButton) findViewById(R.id.dropRadioButton);
@@ -160,6 +176,35 @@ public class TagActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 
+		// Make sure NFC is present on this device
+		if (null == m_nfcAdapter) {
+			Toast.makeText(this,
+					"Device must support NFC to use this application.",
+					Toast.LENGTH_LONG).show();
+			finish();
+			return;
+		}
+
+		// Make sure NFC is enabled
+		if (!m_nfcAdapter.isEnabled()) {
+			Toast.makeText(this,
+					"You must enable NFC to use this application.",
+					Toast.LENGTH_LONG).show();
+			startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+			finish();
+			return;
+		}
+
+		// Make sure GPS is enabled
+		if (!m_locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			Toast.makeText(this,
+					"You must enable GPS to use this application.",
+					Toast.LENGTH_LONG).show();
+			startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+			finish();
+			return;
+		}
+
 		// If an NFC read is supposed to be in progress, restart it
 		if (m_waitForTag) {
 			startNFCRead();
@@ -192,20 +237,24 @@ public class TagActivity extends Activity {
 
 		// Provide vibration feedback for a successful read
 		startFeedback();
+		
+		// Create an intent and fill it with the extras used by both drops and pickups
+		Intent intent = new Intent();
+		intent.putExtra(IntentConstants.EXTRA_ID, tagIDStr);
+		intent.putExtra(IntentConstants.EXTRA_LAT, String.valueOf(m_lastLocation.getLatitude()));
+		intent.putExtra(IntentConstants.EXTRA_LON, String.valueOf(m_lastLocation.getLongitude()));
 
 		// Check if this is a new drop or a pickup
 		if (m_dropRadioButton.isChecked()) {
 			// Launch the activity to enter drop information
-			Intent dropIntent = new Intent(this, DropActivity.class);
-			dropIntent.setAction(IntentConstants.ACTION_DROP);
-			dropIntent.putExtra(IntentConstants.EXTRA_ID, tagIDStr);
-			startActivity(dropIntent);
+			intent.setClass(this, DropActivity.class);
+			intent.setAction(IntentConstants.ACTION_DROP);
+			startActivity(intent);
 		} else {
 			// Launch the activity to display pickup results
-			Intent pickupIntent = new Intent(this, ResultsActivity.class);
-			pickupIntent.setAction(IntentConstants.ACTION_PICKUP);
-			pickupIntent.putExtra(IntentConstants.EXTRA_ID, tagIDStr);
-			startActivity(pickupIntent);
+			intent.setClass(this, ResultsActivity.class);
+			intent.setAction(IntentConstants.ACTION_PICKUP);
+			startActivity(intent);
 		}
 	}
 
@@ -223,7 +272,7 @@ public class TagActivity extends Activity {
 
 	/**
 	 * Updates the UI to reflect the NFC read in progress and enables the NFC
-	 * foreground dispatch.
+	 * foreground dispatch.  Also starts receiving GPS updates.
 	 */
 	private void startNFCRead() {
 		// Update the button text while waiting for a tag
@@ -241,11 +290,17 @@ public class TagActivity extends Activity {
 		m_nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, null,
 				null);
 		Log.d(TAG, "NFC foreground dispatch enabled.");
+
+		// Start listening for location updates
+		m_locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+				0, 0, m_locationListener);
+		// In case there are no location updates, save the last known location
+		m_lastLocation = m_locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 	}
 
 	/**
 	 * Updates the UI to reflect no NFC read in progress and disables the NFC
-	 * foreground dispatch.
+	 * foreground dispatch.  Also stops GPS updates.
 	 */
 	private void stopNFCRead() {
 		// Update tag button text to indicate its new function
@@ -258,6 +313,9 @@ public class TagActivity extends Activity {
 		// Disable NFC foreground dispatch
 		m_nfcAdapter.disableForegroundDispatch(this);
 		Log.d(TAG, "NFC foreground dispatch disabled.");
+
+		// Stop listening for location updates
+		m_locationManager.removeUpdates(m_locationListener);
 	}
 
 	/**

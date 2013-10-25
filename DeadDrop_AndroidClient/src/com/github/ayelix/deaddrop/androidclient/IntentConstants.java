@@ -8,4 +8,8 @@ public final class IntentConstants {
 
 	/** Intent extra for a tag ID string. */
 	public static final String EXTRA_ID = "com.github.ayelix.deaddrop.androidclient.EXTRA_ID";
+	/** Intent extra for a latitude. */
+	public static final String EXTRA_LAT = "com.github.ayelix.deaddrop.androidclient.EXTRA_LAT";
+	/** Intent extra for a longitude. */
+	public static final String EXTRA_LON = "com.github.ayelix.deaddrop.androidclient.EXTRA_LON";
 }

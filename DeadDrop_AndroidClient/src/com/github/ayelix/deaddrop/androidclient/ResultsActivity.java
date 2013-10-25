@@ -17,6 +17,7 @@ public class ResultsActivity extends Activity {
 		// Get the intent that started the activity
 		Intent intent = getIntent();
 		Log.d(TAG, intent.getAction());
+		Log.d(TAG, String.valueOf(intent.getExtras().size()));
 	}
 
 	@Override
