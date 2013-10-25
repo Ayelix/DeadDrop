@@ -11,10 +11,18 @@ javaee/web-app_3_0.xsd"
 		<servlet-name>DropServlet</servlet-name>
 		<servlet-class>com.github.ayelix.deaddrop.server.DropServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>PickupServlet</servlet-name>
+		<servlet-class>com.github.ayelix.deaddrop.server.PickupServlet</servlet-class>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>DropServlet</servlet-name>
 		<url-pattern>/drop</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PickupServlet</servlet-name>
+		<url-pattern>/pickup</url-pattern>
 	</servlet-mapping>
 
 </web-app>	

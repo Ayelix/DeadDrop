@@ -15,14 +15,14 @@ import com.github.ayelix.deaddrop.Drop;
 import com.github.ayelix.deaddrop.Location;
 
 /**
- * Handles drops (uploaded via /drop).
+ * Handles pickups (retrieved via /pickup).
  * 
  * @author Alex
  */
-public final class DropServlet extends HttpServlet {
+public final class PickupServlet extends HttpServlet {
 	/**
-	 * Checks incoming request type then parses provided JSON object to add a
-	 * Drop.
+	 * Checks incoming request type, parses provided JSON object, and returns
+	 * the drop if the user is close enough (and the requested drop exists).
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -46,26 +46,40 @@ public final class DropServlet extends HttpServlet {
 				// Parse the incoming JSON text
 				final JSONObject reqObj = (JSONObject) JSONValue.parse(reader);
 				final String tag = (String) reqObj.get("tag");
-				final String data = (String) reqObj.get("data");
-				final double lat = (double) reqObj.get("lat");
-				final double lon = (double) reqObj.get("long");
-				final double accuracy = (double) reqObj.get("accuracy");
-				final String image = (String) reqObj.get("image");
+				final double lat = ((Number) reqObj.get("lat")).doubleValue();
+				final double lon = ((Number) reqObj.get("long")).doubleValue();
 
-				// Create a Drop with the parsed values
-				final Drop drop = new Drop(tag, data, new Location(lat, lon),
-						accuracy, image);
+				// Check if a drop exists with the parsed tag
+				final Drop drop = DropMap.getInstance().get(tag);
+				if (null != drop) {
+					// Check the user's location against the required accuracy
+					// for the drop
+					final Location userLocation = new Location(lat, lon);
+					final Location dropLocation = drop.getLocation();
+					final Double distance = userLocation.distanceFrom(dropLocation);
+					if (distance <= drop.getLocationAccuracy()) {
+						// Populate the JSON response with the relevant drop info
+						respObj.put("data", drop.getData());
+						respObj.put("image", drop.getImage());
+						respObj.put("distance", distance);
+						
+						// Mark the response as OK
+						resp.setStatus(HttpServletResponse.SC_OK);
+						respObj.put("status", "OK");
 
-				// Add the Drop to the list
-				DropMap.getInstance().put(drop);
-				System.out.println(DropMap.getInstance());
+					} else {
+						respObj.put("status",
+								"Drop not valid in current location.");
+					}
 
-				// Mark the response as OK
-				resp.setStatus(HttpServletResponse.SC_OK);
-				respObj.put("status", "OK");
+				} else {
+					respObj.put("status", "Drop not found for given tag.");
+				}
+
 			} else {
 				respObj.put("status", "Invalid content type");
 			}
+
 		} else {
 			respObj.put("status", "Missing content type");
 		}

@@ -20,7 +20,6 @@ public final class MapGenerator {
 		for (int i = 0; i < count; i++) {
 			final int index = numberGenerator.nextInt(listSize);
 			map.put(dropList.get(index));
-			System.out.println("Added to map: " + dropList.get(index));
 		}
 	}
 
