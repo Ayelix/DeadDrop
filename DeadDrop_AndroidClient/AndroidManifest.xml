@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.github.ayelix.deaddrop.androidclient.MainActivity"
+            android:name="com.github.ayelix.deaddrop.androidclient.TagActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
