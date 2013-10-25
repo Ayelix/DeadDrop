@@ -113,7 +113,7 @@ public class TagActivity extends Activity {
 					KeyEvent event) {
 				boolean handled = false;
 				if (EditorInfo.IME_ACTION_GO == actionId) {
-					Log.d(TAG, "Keyboard Go button pressed.");
+					readTagFromUI();
 					handled = true;
 				}
 				return handled;
@@ -124,7 +124,7 @@ public class TagActivity extends Activity {
 		m_goButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Go button clicked.");
+				readTagFromUI();
 			}
 		});
 	}
@@ -187,6 +187,18 @@ public class TagActivity extends Activity {
 
 		// Provide vibration feedback for a successful read
 		startFeedback();
+	}
+
+	/**
+	 * Reads a tag ID entered in the UI as if it were from a scanned NFC tag.
+	 */
+	private void readTagFromUI() {
+		String tagIDStr = m_tagEditText.getText().toString();
+		
+		// Ignore a blank or whitespace-only ID
+		if (!tagIDStr.isEmpty() && !tagIDStr.trim().isEmpty()) {
+			tagReady(tagIDStr);
+		}
 	}
 
 	/**
