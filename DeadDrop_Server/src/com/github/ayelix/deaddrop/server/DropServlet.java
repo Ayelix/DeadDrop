@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import com.github.ayelix.deaddrop.Drop;
+import com.github.ayelix.deaddrop.JSONParser;
 import com.github.ayelix.deaddrop.Location;
 
 /**
@@ -45,19 +46,10 @@ public final class DropServlet extends HttpServlet {
 			if (contentType.equals("application/json")) {
 				// Parse the incoming JSON text
 				final JSONObject reqObj = (JSONObject) JSONValue.parse(reader);
-				final String tag = (String) reqObj.get("tag");
-				final String data = (String) reqObj.get("data");
-				final double lat = ((Number) reqObj.get("lat")).doubleValue();
-				final double lon = ((Number) reqObj.get("long")).doubleValue();
-				final double accuracy = ((Number) reqObj.get("accuracy")).doubleValue();
-				final String image = (String) reqObj.get("image");
-
-				// Create a Drop with the parsed values
-				final Drop drop = new Drop(tag, data, new Location(lat, lon),
-						accuracy, image);
+				final Drop parsedDrop = JSONParser.parseDrop(reqObj);
 
 				// Add the Drop to the list
-				DropMap.getInstance().put(drop);
+				DropMap.getInstance().put(parsedDrop);
 				System.out.println(DropMap.getInstance());
 
 				// Mark the response as OK

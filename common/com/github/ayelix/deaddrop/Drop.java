@@ -1,5 +1,7 @@
 package com.github.ayelix.deaddrop;
 
+import org.json.simple.JSONObject;
+
 /**
  * Data, metadata, and operations related to a drop. The image is stored as a
  * string so that it is platform-idependent.
@@ -20,15 +22,20 @@ public class Drop {
 	 * The required accuracy of a user's location to pick up the drop (in
 	 * miles).
 	 */
-	private double m_locationAccuracyMi;
+	private Double m_locationAccuracyMi;
 
 	/** Create a drop with the given data and metadata. */
 	public Drop(final String tag, final String data, final Location location,
-			final double locationAccuracyInMiles, final String image) {
+			final Double locationAccuracyInMiles, final String image) {
 		m_tag = tag;
 		m_data = data;
 		m_location = location;
-		m_locationAccuracyMi = locationAccuracyInMiles;
+		if (null != locationAccuracyInMiles) {
+			m_locationAccuracyMi = locationAccuracyInMiles;
+		} else {
+			System.out.println("Null accuracy in Drop().");
+			m_locationAccuracyMi = 0.0;
+		}
 		m_image = image;
 	} // End constructor
 
@@ -66,7 +73,7 @@ public class Drop {
 	 * 
 	 * @return Maximum permissible distance in miles.
 	 */
-	public double getLocationAccuracy() {
+	public Double getLocationAccuracy() {
 		return m_locationAccuracyMi;
 	}
 
@@ -76,7 +83,7 @@ public class Drop {
 	 * @param locationAccuracyKm
 	 *            Maximum permissible distance in miles.
 	 */
-	public void setLocationAccuracy(double locationAccuracyMiles) {
+	public void setLocationAccuracy(Double locationAccuracyMiles) {
 		this.m_locationAccuracyMi = locationAccuracyMiles;
 	}
 

@@ -20,10 +20,11 @@ public final class MapGenerator {
 		for (int i = 0; i < count; i++) {
 			final int index = numberGenerator.nextInt(listSize);
 			map.put(dropList.get(index));
+			System.out.println("Added to map: " + dropList.get(index));
 		}
 	}
 
-	private static double randomAccuracy() {
+	private static Double randomAccuracy() {
 		return numberGenerator.nextDouble() * 9.9 + 0.1;
 	}
 

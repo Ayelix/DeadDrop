@@ -10,31 +10,31 @@ package com.github.ayelix.deaddrop;
  */
 public final class Location {
 	/** Average radius of the Earth in miles, used in distanceFrom(). */
-	private static final double EARTH_RADIUS_MI = 3958.761;
+	private static final Double EARTH_RADIUS_MI = 3958.761;
 
 	/** Latitude portion */
-	private double m_latitude;
+	private Double m_latitude;
 	/** Longitude portion */
-	private double m_longitude;
+	private Double m_longitude;
 
-	public Location(final double latitude, final double longitude) {
+	public Location(final Double latitude, final Double longitude) {
 		m_latitude = latitude;
 		m_longitude = longitude;
 	}
 
-	public double getLatitude() {
+	public Double getLatitude() {
 		return m_latitude;
 	}
 
-	public void setLatitude(double latitude) {
+	public void setLatitude(Double latitude) {
 		this.m_latitude = latitude;
 	}
 
-	public double getLongitude() {
+	public Double getLongitude() {
 		return m_longitude;
 	}
 
-	public void setLongitude(double longitude) {
+	public void setLongitude(Double longitude) {
 		this.m_longitude = longitude;
 	}
 
@@ -46,26 +46,26 @@ public final class Location {
 	 *            Second Location for distance calculation.
 	 * @return Great-circle distance in miles.
 	 */
-	public double distanceFrom(Location target) {
-		final double targetLat = target.getLatitude();
-		final double targetLong = target.getLongitude();
+	public Double distanceFrom(Location target) {
+		final Double targetLat = target.getLatitude();
+		final Double targetLong = target.getLongitude();
 
 		// Haversine formula adapted from:
 		// http://www.movable-type.co.uk/scripts/latlong.html
 
-		final double latDifferenceRadians = Math.toRadians(targetLat
+		final Double latDifferenceRadians = Math.toRadians(targetLat
 				- m_latitude);
-		final double longDifferenceRadians = Math.toRadians(targetLong
+		final Double longDifferenceRadians = Math.toRadians(targetLong
 				- m_longitude);
-		final double myLatRadians = Math.toRadians(m_latitude);
-		final double targetLatRadians = Math.toRadians(targetLat);
+		final Double myLatRadians = Math.toRadians(m_latitude);
+		final Double targetLatRadians = Math.toRadians(targetLat);
 
-		final double a = (Math.sin(latDifferenceRadians / 2) * Math
+		final Double a = (Math.sin(latDifferenceRadians / 2) * Math
 				.sin(latDifferenceRadians / 2))
 				+ (Math.sin(longDifferenceRadians / 2) * Math
 						.sin(longDifferenceRadians / 2))
 				* Math.cos(myLatRadians) * Math.cos(targetLatRadians);
-		final double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		final Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
 		return (EARTH_RADIUS_MI * c);
 	}

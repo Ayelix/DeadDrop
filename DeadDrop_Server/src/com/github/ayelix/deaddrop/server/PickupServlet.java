@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import com.github.ayelix.deaddrop.Drop;
+import com.github.ayelix.deaddrop.JSONParser;
 import com.github.ayelix.deaddrop.Location;
 
 /**
@@ -45,31 +46,41 @@ public final class PickupServlet extends HttpServlet {
 			if (contentType.equals("application/json")) {
 				// Parse the incoming JSON text
 				final JSONObject reqObj = (JSONObject) JSONValue.parse(reader);
-				final String tag = (String) reqObj.get("tag");
-				final double lat = ((Number) reqObj.get("lat")).doubleValue();
-				final double lon = ((Number) reqObj.get("long")).doubleValue();
+				final Drop parsedDrop = JSONParser.parseDrop(reqObj);
 
 				// Check if a drop exists with the parsed tag
-				final Drop drop = DropMap.getInstance().get(tag);
+				final Drop drop = DropMap.getInstance()
+						.get(parsedDrop.getTag());
 				if (null != drop) {
-					// Check the user's location against the required accuracy
-					// for the drop
-					final Location userLocation = new Location(lat, lon);
-					final Location dropLocation = drop.getLocation();
-					final Double distance = userLocation.distanceFrom(dropLocation);
-					if (distance <= drop.getLocationAccuracy()) {
-						// Populate the JSON response with the relevant drop info
-						respObj.put("data", drop.getData());
-						respObj.put("image", drop.getImage());
-						respObj.put("distance", distance);
-						
-						// Mark the response as OK
-						resp.setStatus(HttpServletResponse.SC_OK);
-						respObj.put("status", "OK");
+					try {
+						// Check the user's location against the required
+						// accuracy
+						// for the drop
+						final Location userLocation = parsedDrop.getLocation();
+						final Location dropLocation = drop.getLocation();
+						final Double distance = userLocation
+								.distanceFrom(dropLocation);
+						if (distance <= drop.getLocationAccuracy()) {
+							// Populate the JSON response with the relevant drop
+							// info
+							respObj.put("data", drop.getData());
+							respObj.put("image", drop.getImage());
+							respObj.put("distance", distance);
 
-					} else {
+							// Mark the response as OK
+							resp.setStatus(HttpServletResponse.SC_OK);
+							respObj.put("status", "OK");
+
+						} else {
+							respObj.put("status",
+									"Drop not valid in current location.");
+						}
+
+					} catch (NullPointerException npe) {
+						// This means something was null in the location
+						// parameters
 						respObj.put("status",
-								"Drop not valid in current location.");
+								"One or more parameters missing from request.");
 					}
 
 				} else {
