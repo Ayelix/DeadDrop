@@ -131,44 +131,15 @@ public class ResultsActivity extends Activity {
 						+ Constants.PICKUP_PATH;
 				Log.d(TAG, "PickupTask requesting: " + uri);
 
-				// Get the HTTP client and request
-				final HttpClient client = new DefaultHttpClient();
-				final HttpPost request = new HttpPost(uri);
-
-				// Write the JSON string to the request
-				request.setHeader("Content-Type", "application/json");
-				try {
-					request.setEntity(new StringEntity(respObj.toJSONString()));
-				} catch (UnsupportedEncodingException e1) {
-					Log.e(TAG, "Error writing POST.");
-					e1.printStackTrace();
-				}
-
-				try {
-					// Get the response
-					final HttpResponse response = client.execute(request);
-					BufferedReader responseReader = new BufferedReader(
-							new InputStreamReader(response.getEntity()
-									.getContent()));
-
-					// Get the status code
-					final int responseStatus = response.getStatusLine()
-							.getStatusCode();
-
-					/*
-					 * // Get the results as a string String line = new
-					 * String(); StringBuilder sb = new StringBuilder(); while
-					 * ((line = responseReader.readLine()) != null) {
-					 * sb.append(line + "\n"); } final String responseStr =
-					 * sb.toString();
-					 */
-
-					// Create a JSONObject to parse to results
-					JSONObject obj = (JSONObject) JSONValue
-							.parse(responseReader);
+				// Build and execute the request
+				JSONPost post = new JSONPost(uri, respObj);
+				if (post.execute()) {
+					// Get the status code and JSON results
+					final int postStatus = post.getStatus();
+					final JSONObject obj = post.getJSON();
 
 					// Check the status code
-					if (200 == responseStatus) {
+					if (200 == postStatus) {
 						final Drop result = JSONParser.parseDrop(obj);
 						final Double distance = JSONParser.parseDouble(obj,
 								"distance");
@@ -185,14 +156,8 @@ public class ResultsActivity extends Activity {
 							status = "No error status available";
 						Log.d(TAG, "Pickup failed, status: " + status);
 					}
-
-				} catch (ClientProtocolException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} else {
+					Log.e(TAG, "Error posting pickup request.");
 				}
 
 			} else {
