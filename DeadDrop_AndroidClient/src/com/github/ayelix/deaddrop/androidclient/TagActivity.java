@@ -136,17 +136,15 @@ public class TagActivity extends Activity {
 		// Make sure it's an NFC intent that should be handled
 		final String action = intent.getAction();
 		if (NFC_ACTION_LIST.contains(action)) {
-			// Provide vibration feedback for a successful read
-			startFeedback();
-
 			// Get the scanned tag's ID in a String format
 			final Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 			final String tagIDStr = Arrays.toString(tag.getId());
 
-			Log.d(TAG, "Scanned tag with ID: " + tagIDStr);
-
 			// Clear the flag to indicate the read is complete
 			m_waitForTag = false;
+
+			// Move to the next activity
+			tagReady(tagIDStr);
 		}
 	}
 
@@ -176,6 +174,19 @@ public class TagActivity extends Activity {
 
 		// In case the NFC foreground dispatch is enabled, stop it
 		stopNFCRead();
+	}
+
+	/**
+	 * Launches the appropriate activity after a tag is read.
+	 * 
+	 * @param tagIDStr
+	 *            ID of the tag in String format.
+	 */
+	private void tagReady(final String tagIDStr) {
+		Log.d(TAG, "Scanned tag with ID: " + tagIDStr);
+
+		// Provide vibration feedback for a successful read
+		startFeedback();
 	}
 
 	/**
