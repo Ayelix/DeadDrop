@@ -1,7 +1,5 @@
 package com.github.ayelix.deaddrop;
 
-import org.json.simple.JSONObject;
-
 /**
  * Data, metadata, and operations related to a drop. The image is stored as a
  * string so that it is platform-idependent.
