@@ -19,30 +19,13 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context=".TagActivity" >
 
-        <RadioGroup
-            android:id="@+id/RadioGroup1"
-            android:layout_width="match_parent"
+        <ToggleButton
+            android:id="@+id/modeButton"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:checkedButton="@+id/dropRadioButton"
-            android:orientation="horizontal" >
-
-            <RadioButton
-                android:id="@+id/dropRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".5"
-                android:text="@string/dropRadioButton_text"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <RadioButton
-                android:id="@+id/pickupRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".5"
-                android:text="@string/pickupRadioButton_text"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        </RadioGroup>
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textOff="@string/modeButton_text_off"
+            android:textOn="@string/modeButton_text_on" />
 
         <Button
             android:id="@+id/tagButton"

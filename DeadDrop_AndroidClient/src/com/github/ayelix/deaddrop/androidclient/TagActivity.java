@@ -26,6 +26,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 /**
  * Allows user to scan a tag or enter a tag ID manually. This Activity is the
@@ -46,8 +47,7 @@ public class TagActivity extends Activity {
 	/** Vibration pattern for NFC read feedback. */
 	private static final long[] VIBRATE_PATTERN = new long[] { 0, 150, 0, 300 };
 
-	private RadioButton m_dropRadioButton;
-	private RadioButton m_pickupRadioButton;
+	private ToggleButton m_modeButton;
 	private Button m_tagButton;
 	private EditText m_tagEditText;
 	private Button m_goButton;
@@ -104,8 +104,7 @@ public class TagActivity extends Activity {
 		m_locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		// Get the views
-		m_dropRadioButton = (RadioButton) findViewById(R.id.dropRadioButton);
-		m_pickupRadioButton = (RadioButton) findViewById(R.id.pickupRadioButton);
+		m_modeButton = (ToggleButton) findViewById(R.id.modeButton);
 		m_tagButton = (Button) findViewById(R.id.tagButton);
 		m_tagEditText = (EditText) findViewById(R.id.tagEditText);
 		m_goButton = (Button) findViewById(R.id.goButton);
@@ -248,7 +247,7 @@ public class TagActivity extends Activity {
 				String.valueOf(m_lastLocation.getLongitude()));
 
 		// Check if this is a new drop or a pickup
-		if (m_dropRadioButton.isChecked()) {
+		if (m_modeButton.isChecked()) {
 			// Launch the activity to enter drop information
 			intent.setClass(this, DropActivity.class);
 			intent.setAction(Constants.ACTION_DROP);
