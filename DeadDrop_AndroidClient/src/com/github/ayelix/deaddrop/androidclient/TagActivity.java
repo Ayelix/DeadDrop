@@ -1,9 +1,13 @@
 package com.github.ayelix.deaddrop.androidclient;
 
+import java.util.Arrays;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -26,6 +30,11 @@ import android.widget.Toast;
  */
 public class TagActivity extends Activity {
 	private static final String TAG = "TagActivity";
+
+	private static final List<String> NFC_ACTION_LIST = Arrays
+			.asList(NfcAdapter.ACTION_NDEF_DISCOVERED,
+					NfcAdapter.ACTION_TAG_DISCOVERED,
+					NfcAdapter.ACTION_TECH_DISCOVERED);
 
 	private Button m_tagButton;
 	private EditText m_tagEditText;
@@ -109,6 +118,24 @@ public class TagActivity extends Activity {
 		});
 	}
 
+	@Override
+	public void onNewIntent(final Intent intent) {
+		super.onNewIntent(intent);
+
+		// Make sure it's an NFC intent that should be handled
+		final String action = intent.getAction();
+		if (NFC_ACTION_LIST.contains(action)) {
+			// Get the scanned tag's ID in a String format
+			final Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+			final String tagIDStr = Arrays.toString(tag.getId());
+			
+			Log.d(TAG, "Scanned tag with ID: " + tagIDStr);
+
+			// Clear the flag to indicate the read is complete
+			m_waitForTag = false;
+		}
+	}
+
 	/**
 	 * If an NFC read is in progress, restarts the read.
 	 */
@@ -119,6 +146,10 @@ public class TagActivity extends Activity {
 		// If an NFC read is supposed to be in progress, restart it
 		if (m_waitForTag) {
 			startNFCRead();
+		}
+		// If not, stop it in case it's running
+		else {
+			stopNFCRead();
 		}
 	}
 
