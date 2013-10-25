@@ -109,11 +109,14 @@ public class TagActivity extends Activity {
 		});
 	}
 
+	/**
+	 * If an NFC read is in progress, restarts the read.
+	 */
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		// If an NFC read is supposed to be in progress, re-start it
+		// If an NFC read is supposed to be in progress, restart it
 		if (m_waitForTag) {
 			startNFCRead();
 		}
@@ -125,11 +128,15 @@ public class TagActivity extends Activity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		
+
 		// In case the NFC foreground dispatch is enabled, stop it
 		stopNFCRead();
 	}
 
+	/**
+	 * Updates the UI to reflect the NFC read in progress and enables the NFC
+	 * foreground dispatch.
+	 */
 	private void startNFCRead() {
 		// Update the button text while waiting for a tag
 		m_tagButton.setText(R.string.tagButton_text_stop);
@@ -148,6 +155,10 @@ public class TagActivity extends Activity {
 		Log.d(TAG, "NFC foreground dispatch enabled.");
 	}
 
+	/**
+	 * Updates the UI to reflect no NFC read in progress and disables the NFC
+	 * foreground dispatch.
+	 */
 	private void stopNFCRead() {
 		// Update tag button text to indicate its new function
 		m_tagButton.setText(R.string.tagButton_text_start);
