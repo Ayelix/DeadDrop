@@ -4,8 +4,8 @@
     <string name="app_name">DeadDrop</string>
     <string name="action_settings">Settings</string>
     <!-- Tag button text values -->
-    <string name="tagButton_text_enabled">Read a Tag</string>
-    <string name="tagButton_text_disabled">Waiting for NFC Tag…</string>
+    <string name="tagButton_text_start">Read a Tag</string>
+    <string name="tagButton_text_stop">Waiting for NFC Tag…\n(click to cancel)</string>
     <!-- Tag entry hint value -->
     <string name="tagEditText_hint">Manually enter tag…</string>
     <!-- Go button text value -->
