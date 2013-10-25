@@ -51,8 +51,9 @@ public class DropServlet extends HttpServlet {
 				final String imageStr = (String) reqObj.get("image");
 				
 				// Create a Drop with the parsed values
-				final Drop drop = new Drop(tag, data, new Location(lat, lon), accuracy);
-				
+				final Drop drop = new Drop(tag, data, new Location(lat, lon),
+						accuracy, image);
+
 				resp.setStatus(HttpServletResponse.SC_OK);
 				respObj.put("status", "OK");
 			} else {

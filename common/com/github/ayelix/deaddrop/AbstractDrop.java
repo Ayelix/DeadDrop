@@ -15,7 +15,10 @@ public abstract class AbstractDrop {
 	private String m_data;
 	/** The drop location */
 	private Location m_location;
-	/** The required accuracy of a user's location to pick up the drop (in miles). */
+	/**
+	 * The required accuracy of a user's location to pick up the drop (in
+	 * miles).
+	 */
 	private double m_locationAccuracyMi;
 
 	/** Create a drop with the given data and metadata. */

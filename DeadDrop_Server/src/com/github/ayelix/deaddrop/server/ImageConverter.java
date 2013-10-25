@@ -21,15 +21,16 @@ public final class ImageConverter {
 
 		// Decode the Base64 string
 		byte[] decodedBytes = DatatypeConverter.parseBase64Binary(imageStr);
-		// 
+		//
 		ByteArrayInputStream stream = new ByteArrayInputStream(decodedBytes);
 		try {
 			image = ImageIO.read(stream);
 			stream.close();
 		} catch (IOException e) {
 			// Eat the exception and just return null
+			e.printStackTrace();
 		}
-		
+
 		return image;
 	}
 
@@ -49,10 +50,12 @@ public final class ImageConverter {
 			ImageIO.write(image, "jpg", stream);
 			stream.flush();
 			// Create a string from the byte stream's contents
-			imageStr = DatatypeConverter.printBase64Binary(stream.toByteArray());
+			imageStr = DatatypeConverter
+					.printBase64Binary(stream.toByteArray());
 			stream.close();
 		} catch (IOException e) {
 			// Eat the exception and just return null
+			e.printStackTrace();
 		}
 
 		return imageStr;

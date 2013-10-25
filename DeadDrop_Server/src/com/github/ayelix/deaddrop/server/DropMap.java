@@ -2,8 +2,6 @@ package com.github.ayelix.deaddrop.server;
 
 import java.util.HashMap;
 
-import com.github.ayelix.deaddrop.AbstractDrop;
-
 /**
  * Singleton for a map containing drops.
  * 

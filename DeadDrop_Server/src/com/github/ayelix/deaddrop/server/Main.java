@@ -51,9 +51,9 @@ public final class Main extends HttpServlet {
 	/** Add some sample drops to the DropMap. */
 	public static void generateMap() {
 		DropMap map = DropMap.getInstance();
-		
+
 		MapGenerator.populate(map, 3);
-		
+
 		System.out.println("Drops generated.");
 	}
 }
