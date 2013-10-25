@@ -43,7 +43,7 @@ public final class Main extends HttpServlet {
 			server.start();
 			server.join();
 		} catch (Exception e) {
-			System.err.println("Could not start server.");
+			System.err.println("Could not start server:");
 			e.printStackTrace();
 		}
 	}
