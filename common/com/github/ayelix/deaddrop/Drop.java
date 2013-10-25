@@ -1,20 +1,21 @@
 package com.github.ayelix.deaddrop;
 
 /**
- * Abstract class for <i>almost</i> all the data, metadata, and operations
- * related to a drop. The image-related data and operations are missing because
- * they vary between server and client.
+ * Data, metadata, and operations related to a drop. The image is stored as a
+ * string so that it is platform-idependent.
  * 
  * @author Alex
  * 
  */
-public abstract class AbstractDrop {
+public class Drop {
 	/** The tag identifying the drop */
 	private String m_tag;
 	/** The dropped data */
 	private String m_data;
 	/** The drop location */
 	private Location m_location;
+	/** The drop image */
+	private String m_image;
 	/**
 	 * The required accuracy of a user's location to pick up the drop (in
 	 * miles).
@@ -22,13 +23,19 @@ public abstract class AbstractDrop {
 	private double m_locationAccuracyMi;
 
 	/** Create a drop with the given data and metadata. */
-	public AbstractDrop(final String tag, final String data,
-			final Location location, final double locationAccuracyInMiles) {
+	public Drop(final String tag, final String data, final Location location,
+			final double locationAccuracyInMiles, final String image) {
 		m_tag = tag;
 		m_data = data;
 		m_location = location;
 		m_locationAccuracyMi = locationAccuracyInMiles;
+		m_image = image;
 	} // End constructor
+
+	public String toString() {
+		return super.toString() + ", tag=" + getTag() + ", data=" + getData()
+				+ ", accuracy=" + getLocationAccuracy();
+	}
 
 	public String getTag() {
 		return m_tag;
@@ -73,4 +80,11 @@ public abstract class AbstractDrop {
 		this.m_locationAccuracyMi = locationAccuracyMiles;
 	}
 
+	public String getImage() {
+		return m_image;
+	}
+
+	public void setImage(final String image) {
+		m_image = image;
+	}
 } // End class AbstractDrop

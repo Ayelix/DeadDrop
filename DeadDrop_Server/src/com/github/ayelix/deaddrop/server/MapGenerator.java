@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.github.ayelix.deaddrop.Drop;
 import com.github.ayelix.deaddrop.Location;
 
 public final class MapGenerator {

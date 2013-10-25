@@ -1,6 +1,5 @@
 package com.github.ayelix.deaddrop.server;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import com.github.ayelix.deaddrop.Drop;
 import com.github.ayelix.deaddrop.Location;
 
 /**
@@ -19,10 +19,11 @@ import com.github.ayelix.deaddrop.Location;
  * 
  * @author Alex
  */
-public class DropServlet extends HttpServlet {
-	static int tag = 0;
-	static int data = 100;
-
+public final class DropServlet extends HttpServlet {
+	/**
+	 * Checks incoming request type then parses provided JSON object to add a
+	 * Drop.
+	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
@@ -49,15 +50,15 @@ public class DropServlet extends HttpServlet {
 				final double lat = (double) reqObj.get("lat");
 				final double lon = (double) reqObj.get("long");
 				final double accuracy = (double) reqObj.get("accuracy");
-				final String imageStr = (String) reqObj.get("image");
-
-				// Convert the image string to a BufferedImage
-				final BufferedImage image = ImageConverter
-						.stringToImage(imageStr);
+				final String image = (String) reqObj.get("image");
 
 				// Create a Drop with the parsed values
 				final Drop drop = new Drop(tag, data, new Location(lat, lon),
 						accuracy, image);
+
+				// Add the Drop to the list
+				DropMap.getInstance().put(drop);
+				System.out.println(DropMap.getInstance());
 
 				resp.setStatus(HttpServletResponse.SC_OK);
 				respObj.put("status", "OK");

@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import com.github.ayelix.deaddrop.Drop;
 import com.github.ayelix.deaddrop.Location;
 
 public final class Main extends HttpServlet {
