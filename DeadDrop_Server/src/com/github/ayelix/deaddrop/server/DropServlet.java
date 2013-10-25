@@ -1,5 +1,6 @@
 package com.github.ayelix.deaddrop.server;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -49,7 +50,11 @@ public class DropServlet extends HttpServlet {
 				final double lon = (double) reqObj.get("long");
 				final double accuracy = (double) reqObj.get("accuracy");
 				final String imageStr = (String) reqObj.get("image");
-				
+
+				// Convert the image string to a BufferedImage
+				final BufferedImage image = ImageConverter
+						.stringToImage(imageStr);
+
 				// Create a Drop with the parsed values
 				final Drop drop = new Drop(tag, data, new Location(lat, lon),
 						accuracy, image);
