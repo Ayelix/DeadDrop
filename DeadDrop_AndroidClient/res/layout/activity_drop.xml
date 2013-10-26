@@ -1,95 +1,88 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dropMasterScrollView"
+    android:id="@+id/dropLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true" >
+    android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/dropLinearLayout"
+    <ScrollView
+        android:id="@+id/dropSubScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:fillViewport="false" >
 
-        <ScrollView
-            android:id="@+id/dropSubScrollView"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fillViewport="false" >
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            tools:context=".DropActivity" >
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                tools:context=".DropActivity" >
+            <TextView
+                android:id="@+id/dataTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="@string/dataTextView_text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <TextView
-                    android:id="@+id/dataTextView"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:text="@string/dataTextView_text"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            <EditText
+                android:id="@+id/dataEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/dataTextView"
+                android:ems="10"
+                android:hint="@string/dataEditText_hint"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <EditText
-                    android:id="@+id/dataEditText"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/dataTextView"
-                    android:ems="10"
-                    android:hint="@string/dataEditText_hint"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/accuracyTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/dataEditText"
+                android:text="@string/accuracyTextView_text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <TextView
-                    android:id="@+id/accuracyTextView"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/dataEditText"
-                    android:text="@string/accuracyTextView_text"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            <EditText
+                android:id="@+id/accuracyEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/accuracyTextView"
+                android:ems="10"
+                android:hint="@string/accuracyEditText_hint"
+                android:inputType="numberDecimal"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <EditText
-                    android:id="@+id/accuracyEditText"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/accuracyTextView"
-                    android:ems="10"
-                    android:hint="@string/accuracyEditText_hint"
-                    android:inputType="numberDecimal"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            <Button
+                android:id="@+id/imageButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/accuracyEditText"
+                android:text="@string/imageButton_text" />
 
-                <Button
-                    android:id="@+id/imageButton"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@id/accuracyEditText"
-                    android:text="@string/imageButton_text" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/imageButton"
+                android:scaleType="fitCenter" />
+        </RelativeLayout>
+    </ScrollView>
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/imageButton"
-                    android:scaleType="fitCenter" />
-            </RelativeLayout>
-        </ScrollView>
+    <Button
+        android:id="@+id/dropButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dropButton_text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <Button
-            android:id="@+id/dropButton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dropButton_text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>
