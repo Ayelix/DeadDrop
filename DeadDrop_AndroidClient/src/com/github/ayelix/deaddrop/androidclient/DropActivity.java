@@ -29,13 +29,18 @@ public class DropActivity extends Activity {
 	/** Request code used when taking an image. */
 	private static final int IMAGE_REQUEST_CODE = 1;
 
-	private TextView m_dataTextView;
 	private EditText m_dataEditText;
-	private TextView m_accuracyTextView;
 	private EditText m_accuracyEditText;
 	private Button m_imageButton;
 	private ImageView m_imageView;
 	private Button m_dropButton;
+
+	/** Tag ID provided by TagActivity. */
+	private String m_id;
+	/** Latitude provided by TagActivity. */
+	private String m_lat;
+	/** Longitude provided by TagActivity. */
+	private String m_lon;
 
 	/** Location to store drop image. */
 	private File m_imageFile;
@@ -49,9 +54,7 @@ public class DropActivity extends Activity {
 		setContentView(R.layout.activity_drop);
 
 		// Get the views
-		m_dataTextView = (TextView) findViewById(R.id.dataTextView);
 		m_dataEditText = (EditText) findViewById(R.id.dataEditText);
-		m_accuracyTextView = (TextView) findViewById(R.id.accuracyTextView);
 		m_accuracyEditText = (EditText) findViewById(R.id.accuracyEditText);
 		m_imageButton = (Button) findViewById(R.id.imageButton);
 		m_imageView = (ImageView) findViewById(R.id.imageView);
@@ -77,6 +80,29 @@ public class DropActivity extends Activity {
 			return;
 		}
 
+		// Make sure enough extras are provided
+		Bundle extras = intent.getExtras();
+		if (extras.size() >= 3) {
+			// Save the extras
+			m_id = intent.getExtras().getString(Constants.EXTRA_ID);
+			m_lat = intent.getExtras().getString(Constants.EXTRA_LAT);
+			m_lon = intent.getExtras().getString(Constants.EXTRA_LON);
+
+			// Make sure all extras were received
+			if ((null == m_id) || (null == m_lat) || (null == m_lon)) {
+				Log.e(TAG, "One or more extras unavailable.");
+				finish();
+				return;
+			}
+
+		} else {
+			Log.e(TAG,
+					"Not enough extras provided with intent: "
+							+ String.valueOf(extras.size()));
+			finish();
+			return;
+		}
+
 		// Get the location for the image file
 		m_imageFile = new File(
 				Environment
@@ -94,6 +120,15 @@ public class DropActivity extends Activity {
 				imageIntent.putExtra(MediaStore.EXTRA_OUTPUT,
 						Uri.fromFile(m_imageFile));
 				startActivityForResult(imageIntent, IMAGE_REQUEST_CODE);
+			}
+		});
+
+		// Create drop button listener
+		m_dropButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// Start the drop attempt
+				startDrop();
 			}
 		});
 	}
@@ -114,8 +149,8 @@ public class DropActivity extends Activity {
 				final int imageW = options.outWidth;
 				final int imageH = options.outHeight;
 
-				// Figure out the scale to limit dimensions to roughly 1000px
-				final int scale = Math.max(imageW, imageH) / 1000;
+				// Figure out the scale to limit dimensions to roughly 500px
+				final int scale = Math.max(imageW, imageH) / 500;
 
 				// Read the image, scaled if needed
 				options.inJustDecodeBounds = false;
@@ -170,4 +205,48 @@ public class DropActivity extends Activity {
 			}
 		}
 	}
+
+	private void startDrop() {
+		// Make sure data was entered
+		final String data = m_dataEditText.getText().toString();
+		if (data.isEmpty() || data.trim().isEmpty()) {
+			Toast.makeText(this,
+					"Error creating drop - you must enter some data!",
+					Toast.LENGTH_LONG).show();
+			return;
+		}
+
+		// Convert number Strings to Doubles
+		Double lat, lon, accuracy;
+		try {
+			lat = Double.valueOf(m_lat);
+			lon = Double.valueOf(m_lon);
+		} catch (NumberFormatException nfe) {
+			Toast.makeText(this,
+					"Error creating drop - invalid location coordinates.",
+					Toast.LENGTH_LONG).show();
+			Log.e(TAG, String.format(
+					"Error parsing latitude and longitude: %s, %s", m_lat,
+					m_lon));
+			return;
+		}
+		try {
+			accuracy = Double.valueOf(m_accuracyEditText.getText().toString());
+		} catch (NumberFormatException nfe) {
+			accuracy = 1.0;
+			Toast.makeText(
+					this,
+					String.format("Using default accuracy of %f mi.", accuracy),
+					Toast.LENGTH_LONG).show();
+		}
+
+		// Create a Location from the lat/long values
+		final com.github.ayelix.deaddrop.Location location = new com.github.ayelix.deaddrop.Location(
+				lat, lon);
+
+		// Create a Drop without the image - that will be encoded in the
+		// DropTask
+		Drop drop = new Drop(m_id, data, location, accuracy, null);
+	}
+
 }
