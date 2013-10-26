@@ -68,4 +68,21 @@ public final class JSONParser {
 		}
 		return retVal;
 	}
+
+	/**
+	 * Writes a Drop to the provided JSON object.
+	 * 
+	 * @param drop
+	 *            Drop to write
+	 * @param obj
+	 *            JSONObject to which Drop will be written
+	 */
+	public static void writeDrop(final Drop drop, final JSONObject obj) {
+		obj.put("tag", drop.getTag());
+		obj.put("data", drop.getData());
+		obj.put("lat", drop.getLocation().getLatitude());
+		obj.put("long", drop.getLocation().getLongitude());
+		obj.put("accuracy", drop.getLocationAccuracy());
+		obj.put("image", drop.getImage());
+	}
 }

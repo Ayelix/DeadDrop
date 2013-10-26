@@ -1,27 +1,33 @@
 package com.github.ayelix.deaddrop.androidclient;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+
+import org.json.simple.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
+
+import com.github.ayelix.deaddrop.Drop;
+import com.github.ayelix.deaddrop.JSONParser;
 
 public class DropActivity extends Activity {
 	public static final String TAG = "DropActivity";
@@ -247,6 +253,67 @@ public class DropActivity extends Activity {
 		// Create a Drop without the image - that will be encoded in the
 		// DropTask
 		Drop drop = new Drop(m_id, data, location, accuracy, null);
+		
+		// Start a DropTask with the Drop
+		new DropTask().execute(drop);
 	}
 
+	private class DropTask extends AsyncTask<Drop, Void, Void> {
+		@Override
+		protected Void doInBackground(Drop... params) {
+			// Get the parameter
+			if (1 == params.length) {
+				final Drop drop = params[0];
+
+				// Encode the image as a Base64 String (if an image is present)
+				String imageStr = null;
+				if (m_image != null) {
+					final ByteArrayOutputStream s = new ByteArrayOutputStream();
+					m_image.compress(Bitmap.CompressFormat.PNG, 100, s);
+					imageStr = Base64.encodeToString(s.toByteArray(),
+							Base64.DEFAULT);
+					Log.d(TAG,
+							String.format("Image string length: %d",
+									imageStr.length()));
+				}
+
+				// Save the image to the Drop
+				drop.setImage(imageStr);
+
+				// Write the Drop to a JSON object
+				JSONObject reqObj = new JSONObject();
+				JSONParser.writeDrop(drop, reqObj);
+
+				// Build the URI for the request
+				final String uri = Constants.DEFAULT_SERVER_ADDR
+						+ Constants.DROP_PATH;
+				Log.d(TAG, "DropTask requesting: " + uri);
+				
+				// Build and execute the request
+				JSONPost post = new JSONPost(uri, reqObj);
+				if (post.execute()) {
+					// Get the status code and JSON results
+					final int postStatus = post.getStatus();
+					final JSONObject obj = post.getJSON();
+					
+					// Parse the status string from the response
+					String status = JSONParser.parseString(obj, "status");
+					if (null == status)
+						status = "No status available";
+
+					// Check the status code
+					if (200 == postStatus) {
+						Log.d(TAG, "Drop succeeded, status: " + status);
+					} else {
+						Log.d(TAG, "Drop failed, status: " + status);
+					}
+					
+				} else {
+					Log.e(TAG, "Drop failed, POST error.");
+				}
+			}
+
+			return null;
+		}
+	}
 }

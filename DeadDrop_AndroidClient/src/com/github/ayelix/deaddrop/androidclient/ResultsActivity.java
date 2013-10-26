@@ -109,10 +109,10 @@ public class ResultsActivity extends Activity {
 				final Double lon = Double.parseDouble(params[2]);
 
 				// Create a JSON object with the parameters
-				JSONObject respObj = new JSONObject();
-				respObj.put("tag", idStr);
-				respObj.put("lat", lat);
-				respObj.put("long", lon);
+				JSONObject reqObj = new JSONObject();
+				reqObj.put("tag", idStr);
+				reqObj.put("lat", lat);
+				reqObj.put("long", lon);
 
 				// Build the URI for the request
 				final String uri = Constants.DEFAULT_SERVER_ADDR
@@ -120,7 +120,7 @@ public class ResultsActivity extends Activity {
 				Log.d(TAG, "PickupTask requesting: " + uri);
 
 				// Build and execute the request
-				JSONPost post = new JSONPost(uri, respObj);
+				JSONPost post = new JSONPost(uri, reqObj);
 				if (post.execute()) {
 					// Get the status code and JSON results
 					final int postStatus = post.getStatus();
