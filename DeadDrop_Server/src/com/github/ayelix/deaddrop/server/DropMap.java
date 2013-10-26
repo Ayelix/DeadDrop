@@ -43,4 +43,17 @@ public class DropMap extends HashMap<String, Drop> {
 	public void put(final Drop drop) {
 		put(drop.getTag(), drop);
 	}
+
+	/**
+	 * Shortcut method to check if a Drop exists in the map (i.e. one with the
+	 * given drop's ID).
+	 * 
+	 * @param drop
+	 *            Drop to check for
+	 * @return true if the map contains a Drop with the same ID as the given
+	 *         Drop. Otherwise, false.
+	 */
+	public boolean contains(final Drop drop) {
+		return containsKey(drop.getTag());
+	}
 }

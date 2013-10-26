@@ -46,7 +46,7 @@ public final class PickupServlet extends HttpServlet {
 			if (contentType.equals("application/json")) {
 				// Parse the incoming JSON text
 				final JSONObject reqObj = (JSONObject) JSONValue.parse(reader);
-				final Drop parsedDrop = JSONParser.parseDrop(reqObj);
+				final Drop parsedDrop = JSONParser.parseDrop(reqObj, true);
 
 				// Check if a drop exists with the parsed tag
 				final Drop drop = DropMap.getInstance()

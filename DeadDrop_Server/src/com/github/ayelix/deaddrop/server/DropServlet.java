@@ -43,20 +43,37 @@ public final class DropServlet extends HttpServlet {
 		if (null != contentType) {
 			// Make sure the content type is correct
 			if (contentType.equals("application/json")) {
-				// Parse the incoming JSON text
-				final JSONObject reqObj = (JSONObject) JSONValue.parse(reader);
-				final Drop parsedDrop = JSONParser.parseDrop(reqObj);
+				try {
+					// Parse the incoming JSON text
+					final JSONObject reqObj = (JSONObject) JSONValue
+							.parse(reader);
+					final Drop parsedDrop = JSONParser.parseDrop(reqObj, false);
 
-				// Add the Drop to the list
-				DropMap.getInstance().put(parsedDrop);
-				System.out.println(DropMap.getInstance());
+					// Check if a Drop with this ID already exists
+					DropMap map = DropMap.getInstance();
+					if (!map.contains(parsedDrop)) {
+						// Add the Drop to the list
+						DropMap.getInstance().put(parsedDrop);
+						System.out.println(DropMap.getInstance());
 
-				// Mark the response as OK
-				resp.setStatus(HttpServletResponse.SC_OK);
-				respObj.put("status", "OK");
+						// Mark the response as OK
+						resp.setStatus(HttpServletResponse.SC_OK);
+						respObj.put("status", "OK");
+
+					} else {
+						respObj.put("status",
+								"Drop already exists for the provided tag ID.");
+					}
+
+				} catch (Exception e) {
+					respObj.put("status",
+							"Error reading provided Drop information.");
+				}
+
 			} else {
 				respObj.put("status", "Invalid content type");
 			}
+
 		} else {
 			respObj.put("status", "Missing content type");
 		}

@@ -11,12 +11,14 @@ public final class JSONParser {
 	 *            JSON object to parse.
 	 * @return Drop constructed from parsed values.
 	 */
-	public static Drop parseDrop(final JSONObject obj) {
+	public static Drop parseDrop(final JSONObject obj,
+			final boolean allowMissingMembers) {
 		final String tag = parseString(obj, "tag");
 		final String data = parseString(obj, "data");
-		final Double lat = parseDouble(obj, "lat");
-		final Double lon = parseDouble(obj, "long");
-		final Double accuracy = parseDouble(obj, "accuracy");
+		final Double lat = parseDouble(obj, "lat", allowMissingMembers);
+		final Double lon = parseDouble(obj, "long", allowMissingMembers);
+		final Double accuracy = parseDouble(obj, "accuracy",
+				allowMissingMembers);
 		final String image = parseString(obj, "image");
 
 		// Create a Drop with the parsed values
@@ -33,15 +35,22 @@ public final class JSONParser {
 	 *            JSON key for the desired value.
 	 * @return Parsed value or null if parsing fails.
 	 */
-	public static Double parseDouble(final JSONObject obj, final String key) {
+	public static Double parseDouble(final JSONObject obj, final String key,
+			final boolean allowMissingValue) {
 		Double retVal = null;
 		try {
 			retVal = ((Number) obj.get(key)).doubleValue();
-		} catch (Exception e) {
-			// No action needed, just return null
-			System.out
-					.println("JSONParser.parseDouble(): No value parsed for key \""
-							+ key + "\"");
+		} catch (RuntimeException re) {
+			// If missing values are allowed, do nothing and just return null
+			if (allowMissingValue) {
+				System.out
+						.println("JSONParser.parseDouble(): No value parsed for key \""
+								+ key + "\"");
+			}
+			// Otherwise, throw exceptions up
+			else {
+				throw re;
+			}
 		}
 		return retVal;
 	}

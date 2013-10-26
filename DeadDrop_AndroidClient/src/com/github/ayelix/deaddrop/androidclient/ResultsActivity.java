@@ -128,9 +128,9 @@ public class ResultsActivity extends Activity {
 
 					// Check the status code
 					if (200 == postStatus) {
-						final Drop result = JSONParser.parseDrop(obj);
+						final Drop result = JSONParser.parseDrop(obj, true);
 						final Double distance = JSONParser.parseDouble(obj,
-								"distance");
+								"distance", false);
 
 						final String distanceStr = (null == distance) ? ("None provided.")
 								: (String.valueOf(distance));
