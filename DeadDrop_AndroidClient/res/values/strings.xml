@@ -20,7 +20,7 @@
     <string name="accuracyTextView_text">Required pickup accuracy (miles):</string>
     <string name="accuracyEditText_hint">Enter accuracy…</string>
     <!-- Image button text -->
-    <string name="imageButton_text">Take a picture</string>
+    <string name="imageButton_text">Take a picture (optional)</string>
     <!-- Drop button text -->
     <string name="dropButton_text">DROP</string>
 
