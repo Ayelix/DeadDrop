@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.Toast;
 
 import com.github.ayelix.deaddrop.Drop;
 import com.github.ayelix.deaddrop.JSONParser;
@@ -33,42 +34,48 @@ public class ResultsActivity extends Activity {
 			return;
 		}
 
+		// Get the extras
+		Bundle extras = intent.getExtras();
+		if (extras == null) {
+			Log.e(TAG, "No extras provided with intent.");
+			finish();
+			return;
+		}
+
 		// The action must be one that this activity handles
 		if (action.equals(Constants.ACTION_DROP)) {
-			throw new UnsupportedOperationException(
-					"Drop action not implemented yet.");
+			// Save the extras
+			final String id = (String) extras.get(Constants.EXTRA_ID);
+			final String data = (String) extras.get(Constants.EXTRA_DATA);
+			final Double lat = (Double) extras.get(Constants.EXTRA_LAT);
+			final Double lon = (Double) extras.get(Constants.EXTRA_LON);
+			final Double accuracy = (Double) extras
+					.get(Constants.EXTRA_ACCURACY);
+			final String image = (String) extras.get(Constants.EXTRA_IMAGE);
+			
+			// Pass the values on to the DropView
+			// m_dropView.update(id, data, lat, lon, accuracy, image, null);
 		} else if (action.equals(Constants.ACTION_PICKUP)) {
-			// Get the extras
-			Bundle extras = intent.getExtras();
-			if (extras != null) {
-				// Make sure enough extras are provided
-				if (extras.size() >= 3) {
-					final String idStr = intent.getExtras().getString(
-							Constants.EXTRA_ID);
-					final String latStr = intent.getExtras().getString(
-							Constants.EXTRA_LAT);
-					final String lonStr = intent.getExtras().getString(
-							Constants.EXTRA_LON);
+			// Make sure enough extras are provided
+			if (extras.size() >= 3) {
+				final String idStr = extras.getString(Constants.EXTRA_ID);
+				final String latStr = extras.getString(Constants.EXTRA_LAT);
+				final String lonStr = extras.getString(Constants.EXTRA_LON);
 
-					// Make sure all extras were received
-					if ((null == idStr) || (null == latStr) || (null == lonStr)) {
-						Log.e(TAG, "One or more extras unavailable.");
-						finish();
-						return;
-					}
-
-					// Start the pickup attempt
-					startPickup(idStr, latStr, lonStr);
-
-				} else {
-					Log.e(TAG, "Not enough extras provided with intent: "
-							+ String.valueOf(extras.size()));
+				// Make sure all extras were received
+				if ((null == idStr) || (null == latStr) || (null == lonStr)) {
+					Log.e(TAG, "One or more extras unavailable.");
 					finish();
 					return;
 				}
 
+				// Start the pickup attempt
+				startPickup(idStr, latStr, lonStr);
+
 			} else {
-				Log.e(TAG, "No extras provided with intent.");
+				Log.e(TAG,
+						"Not enough extras provided with intent: "
+								+ String.valueOf(extras.size()));
 				finish();
 				return;
 			}

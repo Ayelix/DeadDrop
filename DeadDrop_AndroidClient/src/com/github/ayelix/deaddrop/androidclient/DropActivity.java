@@ -326,9 +326,18 @@ public class DropActivity extends Activity {
 
 			// Check the response status code
 			if (200 == m_status) {
-				Toast.makeText(getApplicationContext(),
-						"Drop successful,  status: " + m_statusString,
-						Toast.LENGTH_LONG).show();
+				// Create and populate an intent to display the results
+				Intent resultsIntent = new Intent(getApplicationContext(), ResultsActivity.class);
+				resultsIntent.setAction(Constants.ACTION_DROP);
+				resultsIntent.putExtra(Constants.EXTRA_ID, result.getTag());
+				resultsIntent.putExtra(Constants.EXTRA_DATA, result.getData());
+				resultsIntent.putExtra(Constants.EXTRA_LAT, result.getLocation().getLatitude());
+				resultsIntent.putExtra(Constants.EXTRA_LON, result.getLocation().getLongitude());
+				resultsIntent.putExtra(Constants.EXTRA_ACCURACY, result.getLocationAccuracy());
+				resultsIntent.putExtra(Constants.EXTRA_IMAGE, result.getImage());
+				
+				// Start the activity to display the results
+				startActivity(resultsIntent);
 			} else {
 				Toast.makeText(getApplicationContext(),
 						"Drop failed,  status: " + m_statusString,
