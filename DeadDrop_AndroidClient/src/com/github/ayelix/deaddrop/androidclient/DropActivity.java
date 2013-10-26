@@ -40,6 +40,9 @@ public class DropActivity extends Activity {
 	/** Location to store drop image. */
 	private File m_imageFile;
 
+	/** In-memory copy of image. */
+	private Bitmap m_image;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -114,11 +117,11 @@ public class DropActivity extends Activity {
 				// Figure out the scale to limit dimensions to roughly 1000px
 				final int scale = Math.max(imageW, imageH) / 1000;
 
-				// Read the image into a Bitmap, scaled if needed
+				// Read the image, scaled if needed
 				options.inJustDecodeBounds = false;
 				options.inSampleSize = scale;
 				options.inPurgeable = true;
-				Bitmap image = BitmapFactory.decodeFile(imagePath, options);
+				m_image = BitmapFactory.decodeFile(imagePath, options);
 
 				// See if the image needs to be rotated
 				int rotation = 0;
@@ -148,28 +151,19 @@ public class DropActivity extends Activity {
 					Log.e(TAG, "Error reading EXIF data from image.");
 				}
 
-				// Rotate the image (only use up the memory if actually
-				// rotating)
-				Bitmap rotatedImage;
+				// Rotate the image - only use up the memory from calling
+				// createBitmap if actually rotating
 				if (rotation != 0) {
 					Log.d(TAG, String.format("Rotating %d degrees", rotation));
 					final Matrix matrix = new Matrix();
 					matrix.postRotate(rotation);
-					rotatedImage = Bitmap.createBitmap(image, 0, 0,
-							image.getWidth(), image.getHeight(), matrix, true);
-				} else {
-					rotatedImage = image;
+					m_image = Bitmap.createBitmap(m_image, 0, 0,
+							m_image.getWidth(), m_image.getHeight(), matrix,
+							true);
 				}
 
 				// Update the ImageView
-				m_imageView.setImageBitmap(rotatedImage);
-
-				Log.d(TAG, String.format("Image size %dx%d", image.getWidth(),
-						image.getHeight()));
-				Log.d(TAG,
-						String.format("Rotated size %dx%d",
-								rotatedImage.getWidth(),
-								rotatedImage.getHeight()));
+				m_imageView.setImageBitmap(m_image);
 
 				// Delete the file
 				m_imageFile.delete();
