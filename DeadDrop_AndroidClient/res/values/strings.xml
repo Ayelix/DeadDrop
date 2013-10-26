@@ -13,6 +13,18 @@
     <!-- Mode button text values -->
     <string name="modeButton_text_on">Drop</string>
     <string name="modeButton_text_off">Pickup</string>
+    <!-- Drop data text and hint values -->
+    <string name="dataTextView_text">Data:</string>
+    <string name="dataEditText_hint">Enter data string…</string>
+    <!-- Drop accuracy text and hint values -->
+    <string name="accuracyTextView_text">Required pickup accuracy (miles):</string>
+    <string name="accuracyEditText_hint">Enter accuracy…</string>
+    <!-- Image button text -->
+    <string name="imageButton_text">Take a picture</string>
+    <!-- Drop button text -->
+    <string name="dropButton_text">DROP</string>
+
+    <!-- Generated values -->
     <string name="title_activity_results">ResultsActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_drop">DropActivity</string>
