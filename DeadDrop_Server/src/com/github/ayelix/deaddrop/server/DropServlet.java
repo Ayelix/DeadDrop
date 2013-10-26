@@ -13,7 +13,6 @@ import org.json.simple.JSONValue;
 
 import com.github.ayelix.deaddrop.Drop;
 import com.github.ayelix.deaddrop.JSONParser;
-import com.github.ayelix.deaddrop.Location;
 
 /**
  * Handles drops (uploaded via /drop).

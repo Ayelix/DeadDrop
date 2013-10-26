@@ -12,7 +12,7 @@ public final class Constants {
 	public static final String EXTRA_LAT = "com.github.ayelix.deaddrop.androidclient.EXTRA_LAT";
 	/** Intent extra for a longitude. */
 	public static final String EXTRA_LON = "com.github.ayelix.deaddrop.androidclient.EXTRA_LON";
-	
+
 	/** Default server address including port. */
 	public static final String DEFAULT_SERVER_ADDR = "http://192.168.1.109:8080";
 	/** Path for drop requests. */
