@@ -36,9 +36,24 @@ public class DropActivity extends Activity {
 		m_dropButton = (Button) findViewById(R.id.dropButton);
 
 		// Get the intent that started the activity
-		Intent intent = getIntent();
-		Log.d(TAG, intent.getAction());
-		Log.d(TAG, String.valueOf(intent.getExtras().size()));
+		final Intent intent = getIntent();
+
+		// Get the intent action
+		final String action = intent.getAction();
+
+		// An action must be specified
+		if (null == action) {
+			Log.e(TAG, "Unspecified action.");
+			finish();
+			return;
+		}
+
+		// The action must be one that this activity handles
+		if (!action.equals(Constants.ACTION_DROP)) {
+			Log.e(TAG, "Invalid action: " + action);
+			finish();
+			return;
+		}
 	}
 
 	@Override
