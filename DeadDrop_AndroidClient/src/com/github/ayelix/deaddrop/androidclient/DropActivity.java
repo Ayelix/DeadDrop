@@ -253,14 +253,22 @@ public class DropActivity extends Activity {
 		// Create a Drop without the image - that will be encoded in the
 		// DropTask
 		Drop drop = new Drop(m_id, data, location, accuracy, null);
-		
+
+		// Disable the drop button while a drop is in progress
+		m_dropButton.setEnabled(false);
+
 		// Start a DropTask with the Drop
 		new DropTask().execute(drop);
 	}
 
-	private class DropTask extends AsyncTask<Drop, Void, Void> {
+	private class DropTask extends AsyncTask<Drop, Void, Drop> {
+		private int m_status;
+		private String m_statusString;
+
 		@Override
-		protected Void doInBackground(Drop... params) {
+		protected Drop doInBackground(Drop... params) {
+			Drop retVal = null;
+
 			// Get the parameter
 			if (1 == params.length) {
 				final Drop drop = params[0];
@@ -288,32 +296,45 @@ public class DropActivity extends Activity {
 				final String uri = Constants.DEFAULT_SERVER_ADDR
 						+ Constants.DROP_PATH;
 				Log.d(TAG, "DropTask requesting: " + uri);
-				
+
 				// Build and execute the request
 				JSONPost post = new JSONPost(uri, reqObj);
 				if (post.execute()) {
 					// Get the status code and JSON results
-					final int postStatus = post.getStatus();
+					m_status = post.getStatus();
 					final JSONObject obj = post.getJSON();
-					
-					// Parse the status string from the response
-					String status = JSONParser.parseString(obj, "status");
-					if (null == status)
-						status = "No status available";
 
-					// Check the status code
-					if (200 == postStatus) {
-						Log.d(TAG, "Drop succeeded, status: " + status);
-					} else {
-						Log.d(TAG, "Drop failed, status: " + status);
-					}
-					
+					// Parse the status string from the response
+					m_statusString = JSONParser.parseString(obj, "status");
+					if (null == m_statusString)
+						m_statusString = "No status available";
+
+					retVal = drop;
+
 				} else {
 					Log.e(TAG, "Drop failed, POST error.");
 				}
 			}
 
-			return null;
+			return retVal;
 		}
-	}
+
+		@Override
+		protected void onPostExecute(Drop result) {
+			// Drop complete, reenable the button
+			m_dropButton.setEnabled(true);
+
+			// Check the response status code
+			if (200 == m_status) {
+				Toast.makeText(getApplicationContext(),
+						"Drop successful,  status: " + m_statusString,
+						Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(getApplicationContext(),
+						"Drop failed,  status: " + m_statusString,
+						Toast.LENGTH_LONG).show();
+			}
+		}
+
+	} // End class DropTask
 }
