@@ -15,11 +15,16 @@ import com.github.ayelix.deaddrop.JSONParser;
 
 public class ResultsActivity extends Activity {
 	private static final String TAG = "ResultsActivity";
+	
+	private DropView m_dropView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_results);
+		
+		// Get the views
+		m_dropView = (DropView) findViewById(R.id.DropView);
 
 		// Get the intent that started the activity
 		final Intent intent = getIntent();
