@@ -15,14 +15,14 @@ import com.github.ayelix.deaddrop.JSONParser;
 
 public class ResultsActivity extends Activity {
 	private static final String TAG = "ResultsActivity";
-	
+
 	private DropView m_dropView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_results);
-		
+
 		// Get the views
 		m_dropView = (DropView) findViewById(R.id.DropView);
 
@@ -57,8 +57,9 @@ public class ResultsActivity extends Activity {
 			final Double accuracy = (Double) extras
 					.get(Constants.EXTRA_ACCURACY);
 			final String image = (String) extras.get(Constants.EXTRA_IMAGE);
-			
+
 			// Pass the values on to the DropView
+			m_dropView.removeAllViews();
 			m_dropView.add("Tag ID", id);
 			m_dropView.add("Data", data);
 			m_dropView.add("Latitude", lat.toString());
@@ -113,11 +114,14 @@ public class ResultsActivity extends Activity {
 	 * @author Alex
 	 * 
 	 */
-	private class PickupTask extends
-			AsyncTask<String, Void, Pair<Integer, String>> {
+	private class PickupTask extends AsyncTask<String, Void, Boolean> {
+		private Drop m_dropResult;
+		private String m_distanceString;
+		private String m_status;
+
 		@Override
-		protected Pair<Integer, String> doInBackground(String... params) {
-			Pair<Integer, String> retVal = null;
+		protected Boolean doInBackground(String... params) {
+			Boolean retVal = false;
 
 			if (3 == params.length) {
 				// Parse the parameters
@@ -145,33 +149,49 @@ public class ResultsActivity extends Activity {
 
 					// Check the status code
 					if (200 == postStatus) {
-						final Drop result = JSONParser.parseDrop(obj, true);
+						// Parse the results
+						m_dropResult = JSONParser.parseDrop(obj, true);
 						final Double distance = JSONParser.parseDouble(obj,
 								"distance", false);
-
-						final String distanceStr = (null == distance) ? ("None provided.")
+						m_distanceString = (null == distance) ? ("None provided.")
 								: (String.valueOf(distance));
-						Log.d(TAG,
-								"Pickup succeeded, data: " + result.getData()
-										+ ", image: " + result.getImage()
-										+ ", distance: " + distanceStr);
+
+						// Indicate success in return value
+						retVal = true;
+
 					} else {
-						String status = JSONParser.parseString(obj, "status");
-						if (null == status)
-							status = "No error status available";
-						Log.d(TAG, "Pickup failed, status: " + status);
+						m_status = JSONParser.parseString(obj, "status");
+						if (null == m_status)
+							m_status = "No error status available";
+						Log.d(TAG, "Pickup failed, status: " + m_status);
 					}
 				} else {
+					m_status = "Error posting pickup request.";
 					Log.e(TAG, "Error posting pickup request.");
 				}
 
 			} else {
+				m_status = "Internal application error.";
 				Log.e(TAG,
 						"PickupTask started with incorrect parameter count: "
 								+ String.valueOf(params.length));
 			}
 
 			return retVal;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			m_dropView.removeAllViews();
+
+			if (result) {
+				// Put the results on the DropView
+				m_dropView.add("Data", m_dropResult.getData());
+				m_dropView.add("Distance from Drop", m_distanceString);
+				m_dropView.addImage(m_dropResult.getImage());
+			} else {
+				m_dropView.add("Error", m_status);
+			}
 		}
 	}
 }

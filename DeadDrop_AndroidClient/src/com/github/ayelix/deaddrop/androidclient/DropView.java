@@ -42,13 +42,14 @@ public final class DropView extends LinearLayout {
 		this.setLayoutParams(mainParams);
 	}
 
-	public void addDrop(final Drop drop) {
-		add("Tag ID", drop.getTag());
-		add("Data", drop.getData());
-		add("Latitude", drop.getLocation().getLatitude().toString());
-		add("Longitude", drop.getLocation().getLongitude().toString());
-	}
-
+	/**
+	 * Add a label-value pair to the view.
+	 * 
+	 * @param label
+	 *            Label to display
+	 * @param value
+	 *            Corresponding value
+	 */
 	public void add(String label, String value) {
 		if (null == label) {
 			label = "";
@@ -86,12 +87,19 @@ public final class DropView extends LinearLayout {
 		this.addView(rowLayout);
 	}
 
+	/**
+	 * Add an image to the view.
+	 * 
+	 * @param image
+	 *            Base64 encoded image string to add.
+	 */
 	public void addImage(final String image) {
 		if (image != null) {
 			// Decode the image string
 			byte[] decodedImage = Base64.decode(image, Base64.DEFAULT);
-			Bitmap bitmap = BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.length);
-			
+			Bitmap bitmap = BitmapFactory.decodeByteArray(decodedImage, 0,
+					decodedImage.length);
+
 			// Add an ImageView containing the image
 			final ImageView imageView = new ImageView(m_context);
 			imageView.setLayoutParams(new LayoutParams(
