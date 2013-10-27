@@ -64,6 +64,7 @@ public class ResultsActivity extends Activity {
 			m_dropView.add("Latitude", lat.toString());
 			m_dropView.add("Longitude", lon.toString());
 			m_dropView.add("Required Accuracy (mi)", accuracy.toString());
+			m_dropView.addImage(image);
 		} else if (action.equals(Constants.ACTION_PICKUP)) {
 			// Make sure enough extras are provided
 			if (extras.size() >= 3) {

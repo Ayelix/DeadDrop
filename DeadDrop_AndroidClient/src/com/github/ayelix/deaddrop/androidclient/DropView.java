@@ -1,9 +1,14 @@
 package com.github.ayelix.deaddrop.androidclient;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.view.Gravity;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -79,5 +84,21 @@ public final class DropView extends LinearLayout {
 
 		// Add the row
 		this.addView(rowLayout);
+	}
+
+	public void addImage(final String image) {
+		if (image != null) {
+			// Decode the image string
+			byte[] decodedImage = Base64.decode(image, Base64.DEFAULT);
+			Bitmap bitmap = BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.length);
+			
+			// Add an ImageView containing the image
+			final ImageView imageView = new ImageView(m_context);
+			imageView.setLayoutParams(new LayoutParams(
+					LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+			imageView.setScaleType(ScaleType.FIT_CENTER);
+			imageView.setImageBitmap(bitmap);
+			this.addView(imageView);
+		}
 	}
 }

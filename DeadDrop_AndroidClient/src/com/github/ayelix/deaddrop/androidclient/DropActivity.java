@@ -342,6 +342,7 @@ public class DropActivity extends Activity {
 				Toast.makeText(getApplicationContext(),
 						"Drop failed,  status: " + m_statusString,
 						Toast.LENGTH_LONG).show();
+				Log.d(TAG, "Drop failed, status: " + m_statusString);
 			}
 		}
 
