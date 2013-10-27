@@ -59,7 +59,11 @@ public class ResultsActivity extends Activity {
 			final String image = (String) extras.get(Constants.EXTRA_IMAGE);
 			
 			// Pass the values on to the DropView
-			// m_dropView.update(id, data, lat, lon, accuracy, image, null);
+			m_dropView.add("Tag ID", id);
+			m_dropView.add("Data", data);
+			m_dropView.add("Latitude", lat.toString());
+			m_dropView.add("Longitude", lon.toString());
+			m_dropView.add("Required Accuracy (mi)", accuracy.toString());
 		} else if (action.equals(Constants.ACTION_PICKUP)) {
 			// Make sure enough extras are provided
 			if (extras.size() >= 3) {
