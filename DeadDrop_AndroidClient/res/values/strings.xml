@@ -23,10 +23,14 @@
     <string name="imageButton_text">Take a picture (optional)</string>
     <!-- Drop button text -->
     <string name="dropButton_text">DROP</string>
+    <!-- Preference text values -->
+    <string name="pref_server_addr_key">server_addr</string>
+    <string name="pref_server_addr_title">Change Server Address</string>
+    <string name="pref_server_addr_summary">Server address must include port number</string>
+    <string name="pref_server_addr_default">http://172.31.173.72:8080</string>
 
     <!-- Generated values -->
     <string name="title_activity_results">ResultsActivity</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_drop">DropActivity</string>
 
 </resources>

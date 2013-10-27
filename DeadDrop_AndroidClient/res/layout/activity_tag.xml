@@ -19,10 +19,17 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context=".TagActivity" >
 
+        <fragment
+            android:id="@+id/settingsFragment"
+            android:name="com.github.ayelix.deaddrop.androidclient.SettingsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <ToggleButton
             android:id="@+id/modeButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textOff="@string/modeButton_text_off"
             android:textOn="@string/modeButton_text_on" />

@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -16,6 +17,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -293,8 +295,12 @@ public class DropActivity extends Activity {
 				JSONParser.writeDrop(drop, reqObj);
 
 				// Build the URI for the request
-				final String uri = Constants.DEFAULT_SERVER_ADDR
-						+ Constants.DROP_PATH;
+				SharedPreferences sharedPref = PreferenceManager
+						.getDefaultSharedPreferences(getApplicationContext());
+				final String serverAddr = sharedPref.getString(
+						getString(R.string.pref_server_addr_key),
+						getString(R.string.pref_server_addr_default));
+				final String uri = serverAddr + Constants.DROP_PATH;
 				Log.d(TAG, "DropTask requesting: " + uri);
 
 				// Build and execute the request
@@ -327,15 +333,20 @@ public class DropActivity extends Activity {
 			// Check the response status code
 			if (200 == m_status) {
 				// Create and populate an intent to display the results
-				Intent resultsIntent = new Intent(getApplicationContext(), ResultsActivity.class);
+				Intent resultsIntent = new Intent(getApplicationContext(),
+						ResultsActivity.class);
 				resultsIntent.setAction(Constants.ACTION_DROP);
 				resultsIntent.putExtra(Constants.EXTRA_ID, result.getTag());
 				resultsIntent.putExtra(Constants.EXTRA_DATA, result.getData());
-				resultsIntent.putExtra(Constants.EXTRA_LAT, result.getLocation().getLatitude());
-				resultsIntent.putExtra(Constants.EXTRA_LON, result.getLocation().getLongitude());
-				resultsIntent.putExtra(Constants.EXTRA_ACCURACY, result.getLocationAccuracy());
-				resultsIntent.putExtra(Constants.EXTRA_IMAGE, result.getImage());
-				
+				resultsIntent.putExtra(Constants.EXTRA_LAT, result
+						.getLocation().getLatitude());
+				resultsIntent.putExtra(Constants.EXTRA_LON, result
+						.getLocation().getLongitude());
+				resultsIntent.putExtra(Constants.EXTRA_ACCURACY,
+						result.getLocationAccuracy());
+				resultsIntent
+						.putExtra(Constants.EXTRA_IMAGE, result.getImage());
+
 				// Start the activity to display the results
 				startActivity(resultsIntent);
 			} else {

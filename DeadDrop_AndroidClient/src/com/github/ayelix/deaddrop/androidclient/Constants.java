@@ -19,8 +19,6 @@ public final class Constants {
 	/** Intent extra for a drop image string. */
 	public static final String EXTRA_IMAGE = "com.github.ayelix.deaddrop.androidclient.EXTRA_IMAGE";
 
-	/** Default server address including port. */
-	public static final String DEFAULT_SERVER_ADDR = "http://192.168.1.109:8080";
 	/** Path for drop requests. */
 	public static final String DROP_PATH = "/drop";
 	/** Path for pickup requests. */

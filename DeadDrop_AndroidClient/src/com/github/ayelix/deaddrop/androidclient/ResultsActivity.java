@@ -4,8 +4,10 @@ import org.json.simple.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
@@ -136,8 +138,12 @@ public class ResultsActivity extends Activity {
 				reqObj.put("long", lon);
 
 				// Build the URI for the request
-				final String uri = Constants.DEFAULT_SERVER_ADDR
-						+ Constants.PICKUP_PATH;
+				SharedPreferences sharedPref = PreferenceManager
+						.getDefaultSharedPreferences(getApplicationContext());
+				final String serverAddr = sharedPref.getString(
+						getString(R.string.pref_server_addr_key),
+						getString(R.string.pref_server_addr_default));
+				final String uri = serverAddr + Constants.PICKUP_PATH;
 				Log.d(TAG, "PickupTask requesting: " + uri);
 
 				// Build and execute the request
